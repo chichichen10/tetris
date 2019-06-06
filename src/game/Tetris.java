@@ -34,8 +34,6 @@ public class Tetris extends JFrame {
         j2.addActionListener(ml);
         j3.addActionListener(ml);
 
-        menuGame.add("OTHER").addActionListener(ml);
-
 
         a = new TetrisPanel();
         this.addKeyListener(a.listener);
@@ -56,7 +54,7 @@ public class Tetris extends JFrame {
 
     class TetrisPanel extends JPanel {
         int[][] map = new int[14][23];// 為解決越界,在邊上預留了1列
- // [brickType][rotate][]
+        // [brickType][rotate][]
         int shapes[][][] = new int[][][]{
 
                 {{0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -88,6 +86,11 @@ public class Tetris extends JFrame {
                         {0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
                         {0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0},
                         {1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}},
+                //SRS
+//                {{0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//                        {0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+//                        {0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+//                        {1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}},
 // T
                 {{1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -104,6 +107,12 @@ public class Tetris extends JFrame {
         private TimerListener listener = new TimerListener();
         private Timer timer;
         public int holded;
+        private int combo;
+        boolean running;
+        private int lineSent;
+        private int lines;
+        private int remainBlocks;
+        private boolean perfect;
 
         public TetrisPanel() {
             newGame();
@@ -200,28 +209,35 @@ public class Tetris extends JFrame {
                 }
                 map[i][21] = 3;
             }
-// timer = new Timer(300, listener);
-            delay = 750;
+            // timer = new Timer(300, listener);
+            delay = 1000;
             timer = new Timer(delay, listener);
             timer.start();
-            score = 0;// 分數初始化為0
+            score = 0;
+            combo = 0;
             numOfBlocks = 0;
             for (int i = 0; i < 7; i++) {
                 blocks[i] = 0;
             }
             holded = 7;
-
-            j3.setEnabled(false);//把“新遊戲”選單滅掉
+            running = true;
+            lineSent = 0;
+            remainBlocks = 0;
+            perfect = false;
+            j3.setEnabled(false);
             repaint();
 
             iniBlock();
         }
+
         private void pause() {
             timer.stop();
         }
+
         private void resume() {
             timer.restart();
         }
+
         private void down() {
             if (crash(x, y + 1, blockType, turnState) == 0) {
                 add(x, y, blockType, turnState);
@@ -230,6 +246,7 @@ public class Tetris extends JFrame {
             y++;
             repaint();
         }
+
         private void downPress() {
             if (crash(x, y + 1, blockType, turnState) == 0) {
                 return;
@@ -237,6 +254,7 @@ public class Tetris extends JFrame {
             y++;
             repaint();
         }
+
         private void toEnd() {
             while (crash(x, y + 1, blockType, turnState) != 0) {
                 y++;
@@ -246,6 +264,7 @@ public class Tetris extends JFrame {
             y++;
             repaint();
         }
+
         private void hold() {
             if (holded == 7) {
                 holded = blockType;
@@ -257,6 +276,7 @@ public class Tetris extends JFrame {
 
             }
         }
+
         private int crash(int x, int y, int blockType, int turnState) {
             for (int a = 0; a < 4; a++) {
                 for (int b = 0; b < 4; b++) {
@@ -277,17 +297,36 @@ public class Tetris extends JFrame {
                                 * 4 + b];
                 }
             }
+            remainBlocks += 4;
             tryDeline();
         }
 
         private void turn() {
-            turnState = (turnState + crash(x, y, blockType, (turnState + 1) % 4)) % 4;
+            if (crash(x, y, blockType, (turnState + 1) % 4) == 0) {
+                if (crash(x + 1, y, blockType, (turnState + 1) % 4) != 0) {
+                    x++;
+                    turnState = (turnState + 1) % 4;
+                } else if (crash(x - 1, y, blockType, (turnState + 1) % 4) != 0) {
+                    x--;
+                    turnState = (turnState + 1) % 4;
+                }
+            } else {
+                turnState = (turnState + 1) % 4;
+            }
             repaint();
         }
 
         private void turn2() {
             if (crash(x, y, blockType, (turnState + 3) % 4) != 0) {
                 turnState = (turnState + 3) % 4;
+            } else {
+                if (crash(x + 1, y, blockType, (turnState + 3) % 4) != 0) {
+                    x++;
+                    turnState = (turnState + 3) % 4;
+                } else if (crash(x - 1, y, blockType, (turnState + 3) % 4) != 0) {
+                    x--;
+                    turnState = (turnState + 3) % 4;
+                }
             }
             repaint();
         }
@@ -307,6 +346,7 @@ public class Tetris extends JFrame {
         }
 
         public void tryDeline() {
+            lines = 0;
             for (int b = 0; b < 21; b++) {// b是行號
                 int c = 1;
                 for (int a = 1; a < 13; a++) {// 10列是真正的方塊區,外面有兩列是邊界
@@ -322,8 +362,31 @@ public class Tetris extends JFrame {
                     }
 // 遊戲加分
                     score += 1;
+                    lines++;
+                    remainBlocks -= 10;
                 }
             }
+            if (lines > 0) {
+                combo++;
+            } else combo = 0;
+
+            if (lines >= 2 && lines < 4) {
+                lineSent += lines - 1;
+            } else if (lines == 4)
+                lineSent += 4;
+            if (combo > 1 && combo < 3) {
+                lineSent += 1;
+            } else if (combo >= 3 && combo < 5) {
+                lineSent += 2;
+            } else if (combo >= 5 && combo < 7) {
+                lineSent += 3;
+            } else if (combo >= 7) {
+                lineSent += 4;
+            }
+            if (remainBlocks == 0) {
+                perfect = true;
+                lineSent += 10;
+            } else perfect = false;
         }
 
         @Override
@@ -357,12 +420,12 @@ public class Tetris extends JFrame {
 
 
             g.setColor(Color.black);
-// 畫地圖(已經固定的方塊)
+// fixed blocks
             for (int j = 0; j < 22; j++) {
                 for (int i = 1; i < 13; i++) {
                     if (map[i][j] == 1) {
                         g.fillRect(i * 20, j * 20, 20, 20);
-// 讓堆積塊有分界線
+//
                         g.setColor(Color.gray);
                         g.drawRect(i * 20, j * 20, 20, 20);
                         g.setColor(Color.black);
@@ -371,7 +434,7 @@ public class Tetris extends JFrame {
                     }
                 }
             }
-// 畫方塊區右側部分
+// right side
             g.setColor(Color.blue);
             g.setFont(new Font("aa", Font.BOLD, 18));
             g.drawString("hold: " + shapeOfBrick[holded], 268, 20);
@@ -391,7 +454,17 @@ public class Tetris extends JFrame {
                 }
             }
             g.setColor(Color.blue);
-            g.drawString("score=" + score, 268, 260);
+            g.drawString("score: " + score, 268, 260);
+            g.drawString("LS: " + lineSent, 268, 290);
+            if (combo > 1) {
+                g.setColor(Color.red);
+                g.drawString(combo + " COMBO!", 268, 320);
+            }
+            if (perfect) {
+                g.setColor(Color.green);
+                g.drawString("PERFECT CLEAR", 268, 360);
+            }
+
             g.setColor(Color.gray);
             g.drawString("next: ", 268, 92);
             for (int i = 0; i < 16; i++) {
@@ -458,6 +531,12 @@ public class Tetris extends JFrame {
                         break;
                     case KeyEvent.VK_SHIFT:
                         hold();
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        if (running) {
+                            pause();
+                            running = false;
+                        } else resume();
                 }
             }
         }
