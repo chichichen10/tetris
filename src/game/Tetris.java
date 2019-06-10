@@ -53,10 +53,10 @@ public class Tetris extends JFrame {
     public String[] shapeOfBrick = {"I", "S", "Z", "J", "O", "L", "T", ""};
 
     class TetrisPanel extends JPanel {
-        int[][] map = new int[14][23];// 為解決越界,在邊上預留了1列
+        int[][] map = new int[16][23];// 為解決越界,在邊上預留了1列
         // [brickType][rotate][]
         int shapes[][][] = new int[][][]{
-
+///I
                 {{0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
                         {0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0},
                         {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -72,30 +72,40 @@ public class Tetris extends JFrame {
                         {0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
                         {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}},
 // J
-                {{1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-                        {1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}},
+//                {{1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//                        {0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+//                        {0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+//                        {1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}},
+//                SRS
+                {{1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                        {0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}},
 // O
                 {{1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
 // L
-                {{1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-                        {1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}},
+//                {{1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//                        {0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+//                        {0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+//                        {1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}},
                 //SRS
-//                {{0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//                        {0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
-//                        {0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-//                        {1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}},
+                {{0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                        {1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}},
 // T
-                {{1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-                        {1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}}};
+//                {{1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//                        {0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+//                        {0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+//                        {1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}}};
+                //SRS
+                {{0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                        {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}}};
         private int blockType; // 0-6 3
         private int nextOne;
         private int nextTwo;
@@ -113,6 +123,7 @@ public class Tetris extends JFrame {
         private int lines;
         private int remainBlocks;
         private boolean perfect;
+        private boolean tSpin;
 
         public TetrisPanel() {
             newGame();
@@ -131,6 +142,8 @@ public class Tetris extends JFrame {
             blocks[temp] = 1;
             numOfBlocks++;
             blockType = temp;
+            x = 5;
+            y = 0;
             temp = (int) (Math.random() * 1000) % 4;
             while (blocks[temp] != 0) {
                 temp += 1;
@@ -160,7 +173,6 @@ public class Tetris extends JFrame {
             nextOne = nextTwo;
             nextTwo = temp;
             blocks[temp] = 1;
-            System.out.println(temp + " " + numOfBlocks);
             numOfBlocks += 1;
             if (numOfBlocks == 7) {
                 numOfBlocks = 0;
@@ -169,7 +181,7 @@ public class Tetris extends JFrame {
                 }
             }
             turnState = (int) (Math.random() * 1000) % 4;
-            x = 4;
+            x = 5;
             y = 0;
             if (crash(x, y, blockType, turnState) == 0) {
                 timer.stop();
@@ -187,7 +199,7 @@ public class Tetris extends JFrame {
 
             blockType = holded;
             turnState = (int) (Math.random() * 1000) % 4;
-            x = 4;
+            x = 5;
             y = 0;
             if (crash(x, y, blockType, turnState) == 0) {
                 timer.stop();
@@ -202,10 +214,10 @@ public class Tetris extends JFrame {
         }
 
         public void newGame() {
-            for (int i = 1; i < 13; i++) {// 5
+            for (int i = 2; i < 14; i++) {// 5
                 for (int j = 0; j < 22; j++) {
                     map[i][j] = 0;
-                    map[12][j] = map[1][j] = 3;
+                    map[13][j] = map[2][j] = 3;
                 }
                 map[i][21] = 3;
             }
@@ -225,9 +237,10 @@ public class Tetris extends JFrame {
             remainBlocks = 0;
             perfect = false;
             j3.setEnabled(false);
+            iniBlock();
             repaint();
 
-            iniBlock();
+
         }
 
         private void pause() {
@@ -248,11 +261,16 @@ public class Tetris extends JFrame {
         }
 
         private void downPress() {
-            if (crash(x, y + 1, blockType, turnState) == 0) {
-                return;
+            try {
+                if (crash(x, y + 1, blockType, turnState) == 0) {
+                    timer.wait(500);
+                    add(x, y, blockType, turnState);
+                    nextBlock();
+                }
+                y++;
+                repaint();
+            } catch (Exception e) {
             }
-            y++;
-            repaint();
         }
 
         private void toEnd() {
@@ -281,7 +299,7 @@ public class Tetris extends JFrame {
             for (int a = 0; a < 4; a++) {
                 for (int b = 0; b < 4; b++) {
                     if ((shapes[blockType][turnState][a * 4 + b] & map[x + b
-                            + 2][y + a]) == 1) {
+                            + 3][y + a]) == 1) {
                         return 0;
                     }
                 }
@@ -293,7 +311,7 @@ public class Tetris extends JFrame {
             for (int a = 0; a < 4; a++) {
                 for (int b = 0; b < 4; b++) {
                     if (shapes[blockType][turnState][a * 4 + b] == 1)
-                        map[x + b + 2][y + a] = shapes[blockType][turnState][a
+                        map[x + b + 3][y + a] = shapes[blockType][turnState][a
                                 * 4 + b];
                 }
             }
@@ -303,13 +321,10 @@ public class Tetris extends JFrame {
 
         private void turn() {
             if (crash(x, y, blockType, (turnState + 1) % 4) == 0) {
-                if (crash(x + 1, y, blockType, (turnState + 1) % 4) != 0) {
-                    x++;
-                    turnState = (turnState + 1) % 4;
-                } else if (crash(x - 1, y, blockType, (turnState + 1) % 4) != 0) {
-                    x--;
-                    turnState = (turnState + 1) % 4;
-                }
+                if (blockType != 0 && blockType != 4)
+                    wallKick(turnState, (turnState + 1) % 4);
+                else if (blockType == 0)
+                    wallKickForI(turnState, (turnState + 1) % 4);
             } else {
                 turnState = (turnState + 1) % 4;
             }
@@ -320,15 +335,217 @@ public class Tetris extends JFrame {
             if (crash(x, y, blockType, (turnState + 3) % 4) != 0) {
                 turnState = (turnState + 3) % 4;
             } else {
-                if (crash(x + 1, y, blockType, (turnState + 3) % 4) != 0) {
-                    x++;
-                    turnState = (turnState + 3) % 4;
-                } else if (crash(x - 1, y, blockType, (turnState + 3) % 4) != 0) {
-                    x--;
-                    turnState = (turnState + 3) % 4;
-                }
+                if (blockType != 0 && blockType != 4)
+                    wallKick(turnState, (turnState + 3) % 4);
+                else if (blockType == 0)
+                    wallKickForI(turnState, (turnState + 3) % 4);
             }
             repaint();
+        }
+
+        private void wallKick(int from, int to) {
+            if (from == 0) {
+                if (to == 1) {
+                    int[][] data1 = {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data1[i][0], data1[i][1], to)) {
+                            x += data1[i][0];
+                            y += data1[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 3) {
+                    int[][] data2 = {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data2[i][0], data2[i][1], to)) {
+                            x += data2[i][0];
+                            y += data2[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                }
+            } else if (from == 1) {
+                if (to == 2) {
+                    int[][] data3 = {{1, 0}, {1, 1}, {0, -2}, {1, -2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data3[i][0], data3[i][1], to)) {
+                            x += data3[i][0];
+                            y += data3[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 0) {
+                    int[][] data4 = {{1, 0}, {1, 1}, {0, -2}, {1, -2}};
+                    System.out.println(blockType + " " + turnState);
+                    for (int i = 0; i < 4; i++) {
+                        System.out.println(data4[i][0] + "," + data4[i][1]);
+                        System.out.println(wallTest(data4[i][0], data4[i][1], to));
+                        System.out.println(crash(x + 1, y - 1, blockType, (turnState + 3) % 4));
+                        if (wallTest(data4[i][0], data4[i][1], to)) {
+                            x += data4[i][0];
+                            y += data4[i][1];
+                            turnState = to;
+                            break;
+                        }
+//                        x+=1;
+//                        y-=1;
+//                        turnState=to;
+                    }
+                }
+            } else if (from == 2) {
+                if (to == 3) {
+                    int[][] data5 = {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data5[i][0], data5[i][1], to)) {
+                            x += data5[i][0];
+                            y += data5[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 1) {
+                    int[][] data6 = {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data6[i][0], data6[i][1], to)) {
+                            x += data6[i][0];
+                            y += data6[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                }
+            } else if (from == 3) {
+                if (to == 0) {
+                    int[][] data7 = {{-1, 0}, {-1, 1}, {0, -2}, {-1, -2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data7[i][0], data7[i][1], to)) {
+                            x += data7[i][0];
+                            y += data7[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 2) {
+                    int[][] data8 = {{-1, 0}, {-1, 1}, {0, -2}, {-1, -
+                            2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data8[i][0], data8[i][1], to)) {
+                            x += data8[i][0];
+                            y += data8[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void wallKickForI(int from, int to) {
+            if (from == 0) {
+                if (to == 1) {
+                    int[][] data1 = {{-2, 0}, {1, 0}, {-2, 1}, {1, -2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data1[i][0], data1[i][1], to)) {
+                            x += data1[i][0];
+                            y += data1[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 3) {
+                    int[][] data2 = {{-1, 0}, {2, 0}, {-1, -2}, {2, 1}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data2[i][0], data2[i][1], to)) {
+                            x += data2[i][0];
+                            y += data2[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                }
+            } else if (from == 1) {
+                if (to == 2) {
+                    int[][] data3 = {{-1, 0}, {2, 0}, {-1, -2}, {2, 1}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data3[i][0], data3[i][1], to)) {
+                            x += data3[i][0];
+                            y += data3[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 0) {
+                    int[][] data4 = {{2, 0}, {-1, 0}, {2, -1}, {-1, 2}};
+                    System.out.println(blockType + " " + turnState);
+                    for (int i = 0; i < 4; i++) {
+                        System.out.println(data4[i][0] + "," + data4[i][1]);
+                        System.out.println(wallTest(data4[i][0], data4[i][1], to));
+                        System.out.println(crash(x + 1, y - 1, blockType, (turnState + 3) % 4));
+                        if (wallTest(data4[i][0], data4[i][1], to)) {
+                            x += data4[i][0];
+                            y += data4[i][1];
+                            turnState = to;
+                            break;
+                        }
+//                        x+=1;
+//                        y-=1;
+//                        turnState=to;
+                    }
+                }
+            } else if (from == 2) {
+                if (to == 3) {
+                    int[][] data5 = {{2, 0}, {-1, 0}, {2, -1}, {-1, 2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data5[i][0], data5[i][1], to)) {
+                            x += data5[i][0];
+                            y += data5[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 1) {
+                    int[][] data6 = {{1, 0}, {-2, 0}, {1, 2}, {-2, -1}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data6[i][0], data6[i][1], to)) {
+                            x += data6[i][0];
+                            y += data6[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                }
+            } else if (from == 3) {
+                if (to == 0) {
+                    int[][] data7 = {{1, 0}, {-2, 0}, {1, 2}, {-2, -1}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data7[i][0], data7[i][1], to)) {
+                            x += data7[i][0];
+                            y += data7[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                } else if (to == 2) {
+                    int[][] data8 = {{-2, 0}, {1, 0}, {-2, 1}, {1, -2}};
+                    for (int i = 0; i < 4; i++) {
+                        if (wallTest(data8[i][0], data8[i][1], to)) {
+                            x += data8[i][0];
+                            y += data8[i][1];
+                            turnState = to;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private boolean wallTest(int i, int j, int turn) {
+            if (crash(x + i, y + j, blockType, turn) != 0)
+                return true;
+            else return false;
         }
 
         private void left() {
@@ -349,14 +566,14 @@ public class Tetris extends JFrame {
             lines = 0;
             for (int b = 0; b < 21; b++) {// b是行號
                 int c = 1;
-                for (int a = 1; a < 13; a++) {// 10列是真正的方塊區,外面有兩列是邊界
+                for (int a = 2; a < 14; a++) {// 10列是真正的方塊區,外面有兩列是邊界
                     c &= map[a][b];
                 } // 實心塊是1,邊界是3。這兩者的最後一位都是1,和1&;運算的結果是1
                 if (c == 1) {// 整行的格子要麼是實心塊,要麼是邊界。因為只要有一個0,&;運算的結果就是0
 // 消行
 // 從上往下,逐行掃描,把下一行的格子依次往上移
                     for (int d = b; d > 0; d--) {
-                        for (int e = 2; e < 12; e++) {
+                        for (int e = 3; e < 13; e++) {
                             map[e][d] = map[e][d - 1];
                         }
                     }
@@ -400,7 +617,7 @@ public class Tetris extends JFrame {
             }
             for (int j = 0; j < 16; j++) {
                 if (shapes[blockType][turnState][j] == 1) {
-                    g.fillRect((j % 4 + x + 2) * 20, (j / 4 + k) * 20, 20, 20);
+                    g.fillRect((j % 4 + x + 3) * 20, (j / 4 + k) * 20, 20, 20);
                 }
             }
 //I S Z J O L T
@@ -414,7 +631,7 @@ public class Tetris extends JFrame {
 
             for (int j = 0; j < 16; j++) {
                 if (shapes[blockType][turnState][j] == 1) {
-                    g.fillRect((j % 4 + x + 2) * 20, (j / 4 + y) * 20, 20, 20);
+                    g.fillRect((j % 4 + x + 3) * 20, (j / 4 + y) * 20, 20, 20);
                 }
             }
 
@@ -422,7 +639,7 @@ public class Tetris extends JFrame {
             g.setColor(Color.black);
 // fixed blocks
             for (int j = 0; j < 22; j++) {
-                for (int i = 1; i < 13; i++) {
+                for (int i = 2; i < 14; i++) {
                     if (map[i][j] == 1) {
                         g.fillRect(i * 20, j * 20, 20, 20);
 //
@@ -437,7 +654,8 @@ public class Tetris extends JFrame {
 // right side
             g.setColor(Color.blue);
             g.setFont(new Font("aa", Font.BOLD, 18));
-            g.drawString("hold: " + shapeOfBrick[holded], 268, 20);
+            g.drawString("hold: " + shapeOfBrick[holded], 288, 20);
+            g.drawString("x: " + x + " y: " + y, 288, 380);
             for (int i = 0; i < 16; i++) {
                 if (holded < 7) {
                     if (holded == 0) g.setColor(Color.decode("#00BFFF"));
@@ -448,25 +666,25 @@ public class Tetris extends JFrame {
                     else if (holded == 5) g.setColor(Color.decode("#FF8800"));
                     else if (holded == 6) g.setColor(Color.decode("#CC00FF"));
                     if (shapes[holded][0][i] == 1) {
-                        g.fillRect(285 + (i % 4) * 12, 32 + i / 4 * 14, 14, 14);
+                        g.fillRect(288 + (i % 4) * 12, 32 + i / 4 * 14, 14, 14);
                     }
 
                 }
             }
             g.setColor(Color.blue);
-            g.drawString("score: " + score, 268, 260);
-            g.drawString("LS: " + lineSent, 268, 290);
+            g.drawString("score: " + score, 288, 260);
+            g.drawString("LS: " + lineSent, 288, 290);
             if (combo > 1) {
                 g.setColor(Color.red);
-                g.drawString(combo + " COMBO!", 268, 320);
+                g.drawString(combo + " COMBO!", 288, 320);
             }
             if (perfect) {
                 g.setColor(Color.green);
-                g.drawString("PERFECT CLEAR", 268, 360);
+                g.drawString("PERFECT CLEAR", 288, 360);
             }
 
             g.setColor(Color.gray);
-            g.drawString("next: ", 268, 92);
+            g.drawString("next: ", 288, 92);
             for (int i = 0; i < 16; i++) {
                 if (nextOne < 7) {
                     if (nextOne == 0) g.setColor(Color.decode("#00BFFF"));
@@ -477,7 +695,7 @@ public class Tetris extends JFrame {
                     else if (nextOne == 5) g.setColor(Color.decode("#FF8800"));
                     else if (nextOne == 6) g.setColor(Color.decode("#CC00FF"));
                     if (shapes[nextOne][0][i] == 1) {
-                        g.fillRect(285 + (i % 4) * 12, 108 + i / 4 * 14, 14, 14);
+                        g.fillRect(288 + (i % 4) * 12, 108 + i / 4 * 14, 14, 14);
                     }
 
                 }
@@ -493,7 +711,7 @@ public class Tetris extends JFrame {
                     else if (nextTwo == 5) g.setColor(Color.decode("#FF8800"));
                     else if (nextTwo == 6) g.setColor(Color.decode("#CC00FF"));
                     if (shapes[nextTwo][0][i] == 1) {
-                        g.fillRect(285 + (i % 4) * 12, 160 + i / 4 * 14, 14, 14);
+                        g.fillRect(288 + (i % 4) * 12, 160 + i / 4 * 14, 14, 14);
                     }
 
                 }
