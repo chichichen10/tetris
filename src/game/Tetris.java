@@ -53,7 +53,7 @@ public class Tetris extends JFrame {
     public String[] shapeOfBrick = {"I", "S", "Z", "J", "O", "L", "T", ""};
 
     class TetrisPanel extends JPanel {
-        int[][] map = new int[16][23];// 為解決越界,在邊上預留了1列
+        int[][] map = new int[16][24];// 為解決越界,在邊上預留了1列
         // [brickType][rotate][]
         int shapes[][][] = new int[][][]{
 ///I
@@ -124,6 +124,11 @@ public class Tetris extends JFrame {
         private int remainBlocks;
         private boolean perfect;
         private boolean tSpin;
+        private boolean lock;
+        private int spin;
+        private boolean tCheck;
+        private int tCount;
+        private boolean turn;
 
         public TetrisPanel() {
             newGame();
@@ -169,10 +174,14 @@ public class Tetris extends JFrame {
                 temp += 1;
                 temp = temp % 7;
             }
+            tCheck = false;
             blockType = nextOne;
             nextOne = nextTwo;
+            lock = false;
+            spin = 0;
             nextTwo = temp;
             blocks[temp] = 1;
+            turn = false;
             numOfBlocks += 1;
             if (numOfBlocks == 7) {
                 numOfBlocks = 0;
@@ -196,9 +205,12 @@ public class Tetris extends JFrame {
         }
 
         public void nextHoldedBlock() {
-
+            spin = 0;
+            lock = false;
+            tCheck = false;
             blockType = holded;
             turnState = (int) (Math.random() * 1000) % 4;
+            turn = false;
             x = 5;
             y = 0;
             if (crash(x, y, blockType, turnState) == 0) {
@@ -235,7 +247,11 @@ public class Tetris extends JFrame {
             running = true;
             lineSent = 0;
             remainBlocks = 0;
+            spin = 0;
+            tSpin = false;
+            lock = false;
             perfect = false;
+            turn = false;
             j3.setEnabled(false);
             iniBlock();
             repaint();
@@ -252,7 +268,13 @@ public class Tetris extends JFrame {
         }
 
         private void down() {
+            turn = false;
+            if (blockType == 6)
+                if (crash(x, y + 2, blockType, turnState) == 0)
+                    lock = true;
             if (crash(x, y + 1, blockType, turnState) == 0) {
+                if (blockType == 6)
+                    lock = true;
                 add(x, y, blockType, turnState);
                 nextBlock();
             }
@@ -262,7 +284,10 @@ public class Tetris extends JFrame {
 
         private void downPress() {
             try {
+                turn = false;
                 if (crash(x, y + 1, blockType, turnState) == 0) {
+                    if (blockType == 6)
+                        lock = true;
                     timer.wait(500);
                     add(x, y, blockType, turnState);
                     nextBlock();
@@ -274,6 +299,7 @@ public class Tetris extends JFrame {
         }
 
         private void toEnd() {
+            turn = false;
             while (crash(x, y + 1, blockType, turnState) != 0) {
                 y++;
             }
@@ -315,11 +341,15 @@ public class Tetris extends JFrame {
                                 * 4 + b];
                 }
             }
+            if (blockType == 6)
+                tCheck = tSpinCheck();
             remainBlocks += 4;
             tryDeline();
         }
 
         private void turn() {
+            turn = true;
+            int temp = turnState;
             if (crash(x, y, blockType, (turnState + 1) % 4) == 0) {
                 if (blockType != 0 && blockType != 4)
                     wallKick(turnState, (turnState + 1) % 4);
@@ -328,10 +358,15 @@ public class Tetris extends JFrame {
             } else {
                 turnState = (turnState + 1) % 4;
             }
+            if (lock && (turnState != temp)) {
+                spin++;
+            }
             repaint();
         }
 
         private void turn2() {
+            turn = true;
+            int temp = turnState;
             if (crash(x, y, blockType, (turnState + 3) % 4) != 0) {
                 turnState = (turnState + 3) % 4;
             } else {
@@ -339,6 +374,9 @@ public class Tetris extends JFrame {
                     wallKick(turnState, (turnState + 3) % 4);
                 else if (blockType == 0)
                     wallKickForI(turnState, (turnState + 3) % 4);
+            }
+            if (lock && (turnState != temp)) {
+                spin++;
             }
             repaint();
         }
@@ -479,20 +517,13 @@ public class Tetris extends JFrame {
                     }
                 } else if (to == 0) {
                     int[][] data4 = {{2, 0}, {-1, 0}, {2, -1}, {-1, 2}};
-                    System.out.println(blockType + " " + turnState);
                     for (int i = 0; i < 4; i++) {
-                        System.out.println(data4[i][0] + "," + data4[i][1]);
-                        System.out.println(wallTest(data4[i][0], data4[i][1], to));
-                        System.out.println(crash(x + 1, y - 1, blockType, (turnState + 3) % 4));
                         if (wallTest(data4[i][0], data4[i][1], to)) {
                             x += data4[i][0];
                             y += data4[i][1];
                             turnState = to;
                             break;
                         }
-//                        x+=1;
-//                        y-=1;
-//                        turnState=to;
                     }
                 }
             } else if (from == 2) {
@@ -549,6 +580,7 @@ public class Tetris extends JFrame {
         }
 
         private void left() {
+            turn = false;
             if (x >= -1) {
                 x -= crash(x - 1, y, blockType, turnState);
                 repaint();
@@ -556,6 +588,7 @@ public class Tetris extends JFrame {
         }
 
         private void right() {
+            turn = false;
             if (x < 8) {
                 x += crash(x + 1, y, blockType, turnState);
                 repaint();
@@ -563,6 +596,7 @@ public class Tetris extends JFrame {
         }
 
         public void tryDeline() {
+            tCount=0;
             lines = 0;
             for (int b = 0; b < 21; b++) {// b是行號
                 int c = 1;
@@ -604,6 +638,42 @@ public class Tetris extends JFrame {
                 perfect = true;
                 lineSent += 10;
             } else perfect = false;
+            if (spin > 0) {
+                tSpin = true;
+                if (lines == 1) {
+                    if (turnState == 2) {
+                        lineSent+=2;
+                        tCount = 2;
+                    }else {
+                        lineSent++;
+                        tCount=1;
+                    }
+                }else if(lines==2){
+                    lineSent+=4;
+                    tCount=3;
+                }else if(lines==3){
+                    lineSent+=6;
+                    tCount=4;
+                }else if(lines == 0){
+                    tCount=0;
+                }
+            } else tSpin = false;
+
+        }
+
+        public boolean tSpinCheck() {
+            int count = 0;
+            if (map[x][y] == 1 || map[x][y] == 3)
+                count++;
+            if (map[x + 2][y] == 1 || map[x + 2][y] == 3)
+                count++;
+            if (map[x][y + 2] == 1 || map[x][y + 2] == 3)
+                count++;
+            if (map[x + 2][y + 2] == 1 || map[x + 2][y + 2] == 3)
+                count++;
+            if (count >= 3)
+                return true;
+            else return false;
         }
 
         @Override
@@ -681,6 +751,20 @@ public class Tetris extends JFrame {
             if (perfect) {
                 g.setColor(Color.green);
                 g.drawString("PERFECT CLEAR", 288, 360);
+            }
+
+            if (tSpin) {
+                g.setColor(Color.decode("#CC00FF"));
+                g.drawString("T-SPIN", 288, 340);
+                if(tCount==1)
+                    g.drawString("MINI",288,352);
+                else if(tCount==2){
+                    g.drawString("SINGLE",288,352);
+                }else if(tCount==3){
+                    g.drawString("DOUBLE",288,352);
+                }else if(tCount==4){
+                    g.drawString("TRIPLE",288,352);
+                }
             }
 
             g.setColor(Color.gray);
