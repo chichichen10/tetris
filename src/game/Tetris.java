@@ -106,6 +106,7 @@ public class Tetris extends JFrame {
                         {0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
                         {0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
                         {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}}};
+        private int colored[] = {5, 7, 9, 11, 13, 15, 17};//101,111,1001,1011,1101....
         private int blockType; // 0-6 3
         private int nextOne;
         private int nextTwo;
@@ -295,6 +296,7 @@ public class Tetris extends JFrame {
                 if (crash(x, y + 1, blockType, turnState) == 0) {
                     if (blockType == 6)
                         lock = true;
+                    timer.restart();
                     timer.wait(500);
                     add(x, y, blockType, turnState);
                     nextBlock();
@@ -304,6 +306,7 @@ public class Tetris extends JFrame {
             } catch (Exception e) {
             }
         }
+
 
         private void toEnd() {
             turn = false;
@@ -344,8 +347,7 @@ public class Tetris extends JFrame {
             for (int a = 0; a < 4; a++) {
                 for (int b = 0; b < 4; b++) {
                     if (shapes[blockType][turnState][a * 4 + b] == 1)
-                        map[x + b + 3][y + a] = shapes[blockType][turnState][a
-                                * 4 + b];
+                        map[x + b + 3][y + a] = colored[blockType];
                 }
             }
             if (blockType == 6)
@@ -606,31 +608,36 @@ public class Tetris extends JFrame {
             showB2B = b2b;
             for (int b = 0; b < 21; b++) {
                 int c = 1;
-                for (int a = 2; a < 14; a++) {// 10列是真正的方塊區,外面有兩列是邊界
+                for (int a = 2; a < 14; a++) {// 10
                     c &= map[a][b];
-                } // 實心塊是1,邊界是3。這兩者的最後一位都是1,和1&;運算的結果是1
+                } // 1: 0001 3 :0011  1&1=1
                 if (c == 1) {
                     for (int d = b; d > 0; d--) {
                         for (int e = 3; e < 13; e++) {
                             map[e][d] = map[e][d - 1];
                         }
                     }
-                    score += 1;
                     lines++;
                     remainBlocks -= 10;
                 }
             }
             if (lines > 0) {
                 combo++;
+                score += combo * 50;
             } else combo = -1;
-
+            if (lines == 1)
+                score += 100;
             if (lines >= 2 && lines < 4) {
                 lineSent += lines - 1;
+                score += (200 * lines - 100);
                 tetris = false;
             } else if (lines == 4) {
                 lineSent += 4;
-                if (b2b)
+                score += 800;
+                if (b2b) {
                     lineSent += 2;
+                    score += 400;
+                }
                 tetris = true;
             } else tetris = false;
 
@@ -652,23 +659,29 @@ public class Tetris extends JFrame {
             if (spin > 0 && tCheck) {
                 tSpin = true;
                 if (lines == 1) {
-                    if (turnState == 2) {
+                    if (turnState == 2) {//T-Spin Single
                         lineSent += 2;
                         tCount = 2;
-                    } else {
+                        score += b2b ? 650 : 400;
+                    } else { //T-Spin Mini
                         lineSent++;
                         tCount = 1;
+                        score += b2b ? 350 : 200;
                     }
                     if (b2b)
                         lineSent += 1;
+
                 } else if (lines == 2) {
-                    lineSent += b2b ? 3 : 5;
+                    lineSent += b2b ? 5 : 3;
+                    score += b2b ? 900 : 500;
                     tCount = 3;
                 } else if (lines == 3) {
-                    lineSent += b2b ? 4 : 7;
+                    lineSent += b2b ? 7 : 4;
+                    score += b2b ? 1300 : 700;
                     tCount = 4;
                 } else if (lines == 0) {
                     tCount = 0;
+                    score += 100;
                 }
             } else tSpin = false;
 
@@ -680,13 +693,13 @@ public class Tetris extends JFrame {
 
         public boolean tSpinCheck() {
             int count = 0;
-            if (map[x + 3][y] == 1 || map[x + 3][y] == 3)
+            if ((map[x + 3][y] & 1) == 1)
                 count++;
-            if (map[x + 2 + 3][y] == 1 || map[x + 2 + 3][y] == 3)
+            if ((map[x + 2 + 3][y] & 1) == 1)
                 count++;
-            if (map[x + 3][y + 2] == 1 || map[x + 3][y + 2] == 3)
+            if ((map[x + 3][y + 2] & 1) == 1)
                 count++;
-            if (map[x + 2 + 3][y + 2] == 1 || map[x + 2 + 3][y + 2] == 3)
+            if ((map[x + 2 + 3][y + 2] & 1) == 1)
                 count++;
             if (count >= 3)
                 return true;
@@ -727,13 +740,47 @@ public class Tetris extends JFrame {
 // fixed blocks
             for (int j = 0; j < 22; j++) {
                 for (int i = 2; i < 14; i++) {
-                    if (map[i][j] == 1) {
+                    if (map[i][j] == 1) {//no use
                         g.fillRect(i * 20, j * 20, 20, 20);
-//
                         g.setColor(Color.gray);
                         g.drawRect(i * 20, j * 20, 20, 20);
                         g.setColor(Color.black);
                     } else if (map[i][j] == 3) {
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 5) {
+                        g.setColor(Color.decode("#00BFFF"));
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 7) {
+                        g.setColor(Color.green);
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 9) {
+                        g.setColor(Color.red);
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 11) {
+                        g.setColor(Color.blue);
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 13) {
+                        g.setColor(Color.decode("#FFD700"));
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 15) {
+                        g.setColor(Color.decode("#FF8800"));
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
+                        g.drawRect(i * 20, j * 20, 20, 20);
+                    } else if (map[i][j] == 17) {
+                        g.setColor(Color.decode("#CC00FF"));
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                        g.setColor(Color.black);
                         g.drawRect(i * 20, j * 20, 20, 20);
                     }
                 }
@@ -787,7 +834,7 @@ public class Tetris extends JFrame {
                 } else if (tCount == 3) {
                     g.drawString("DOUBLE", 288, 372);
                 } else if (tCount == 4) {
-                    g.drawString("TRIPLE", 288, 352);
+                    g.drawString("TRIPLE", 288, 372);
                 }
             }
 

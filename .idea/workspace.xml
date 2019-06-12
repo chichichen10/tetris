@@ -28,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/game/Tetris.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4928">
-              <caret line="138" lean-forward="true" selection-start-line="138" selection-end-line="138" />
+            <state relative-caret-position="242">
+              <caret line="701" column="43" selection-start-line="701" selection-start-column="43" selection-end-line="701" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5384#5385#0" expanded="true" />
@@ -38,8 +38,8 @@
                 <element signature="e#9195#9196#0" expanded="true" />
                 <element signature="e#9228#9229#0" expanded="true" />
                 <element signature="e#9267#9268#0" expanded="true" />
-                <element signature="e#30241#30242#0" expanded="true" />
-                <element signature="e#30279#30280#0" expanded="true" />
+                <element signature="e#33422#33423#0" expanded="true" />
+                <element signature="e#33468#33469#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -56,18 +56,19 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>crash</find>
       <find>repaint</find>
       <find>nextBlock</find>
       <find>delay</find>
-      <find>timer</find>
       <find>map</find>
       <find>tCount</find>
       <find>tspincheck</find>
       <find>tcheck</find>
-      <find>lock</find>
       <find>combo</find>
       <find>b2b</find>
+      <find>timer</find>
+      <find>ADD</find>
+      <find>crash</find>
+      <find>lock</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -205,8 +206,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/game/Tetris.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4928">
-          <caret line="138" lean-forward="true" selection-start-line="138" selection-end-line="138" />
+        <state relative-caret-position="242">
+          <caret line="701" column="43" selection-start-line="701" selection-start-column="43" selection-end-line="701" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5384#5385#0" expanded="true" />
@@ -215,8 +216,8 @@
             <element signature="e#9195#9196#0" expanded="true" />
             <element signature="e#9228#9229#0" expanded="true" />
             <element signature="e#9267#9268#0" expanded="true" />
-            <element signature="e#30241#30242#0" expanded="true" />
-            <element signature="e#30279#30280#0" expanded="true" />
+            <element signature="e#33422#33423#0" expanded="true" />
+            <element signature="e#33468#33469#0" expanded="true" />
           </folding>
         </state>
       </provider>
