@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 public class Tetris extends JFrame {
     private TetrisPanel a;
     private JMenuItem j1, j2, j3;
+    private JButton b;
 
 
     public Tetris() {
@@ -34,8 +35,16 @@ public class Tetris extends JFrame {
         j2.addActionListener(ml);
         j3.addActionListener(ml);
 
+//        b= new JButton();
+//        b.setLocation(100,100);
+//        b.setSize(100,100);
+//        add(b);
+//        Cat cat = new Cat();
+//        b.addActionListener(cat);
+
 
         a = new TetrisPanel();
+
         this.addKeyListener(a.listener);
         add(a);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -135,7 +144,8 @@ public class Tetris extends JFrame {
         public boolean showB2B;
 
         public TetrisPanel() {
-            newGame();
+            stop();
+            //newGame();
         }
 
         private int[] blocks = {0, 0, 0, 0, 0, 0, 0};
@@ -229,7 +239,22 @@ public class Tetris extends JFrame {
             }
         }
 
+        private boolean game;
+
+        public void stop() {
+            game = false;
+            JLabel label = new JLabel("<html>Welcome to Tetris<br/>&lt HOW TO PLAY &gt<br/>right,left: move<br/>down: soft drop<br/>space: hard drop<br/>up:rotate clockwise<br/>z: rotate counter-clockwise<br/>shift: hold</html>");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane option = new JOptionPane(label);
+            final JDialog d = option.createDialog((JFrame)null, "Welcome");
+            d.setLocation(440,350);
+            d.setVisible(true);
+
+            newGame();
+        }
+
         public void newGame() {
+            game = true;
             for (int i = 2; i < 14; i++) {// 5
                 for (int j = 0; j < 22; j++) {
                     map[i][j] = 0;
@@ -708,170 +733,184 @@ public class Tetris extends JFrame {
 
         @Override
         protected void paintComponent(Graphics g) {
-            super.paintComponent(g);// 清除殘影
+            if (game) {
+                super.paintComponent(g);// 清除殘影
+                for (int i = 3; i < 13; i++) {
+                    for (int j = 0; j < 21; j++) {
+                        if ((i + j) % 2 == 0)
+                            g.setColor(Color.decode("#272727"));
+                        else g.setColor(Color.decode("#000000"));
+                        g.fillRect(i * 20, j * 20, 20, 20);
+                    }
+                }
 // now and shadow
-            g.setColor(Color.gray);
-            int k = y;
-            while (crash(x, k + 1, blockType, turnState) != 0) {
-                k++;
-            }
-            for (int j = 0; j < 16; j++) {
-                if (shapes[blockType][turnState][j] == 1) {
-                    g.fillRect((j % 4 + x + 3) * 20, (j / 4 + k) * 20, 20, 20);
+                g.setColor(Color.gray);
+                int k = y;
+                while (crash(x, k + 1, blockType, turnState) != 0) {
+                    k++;
                 }
-            }
+                for (int j = 0; j < 16; j++) {
+                    if (shapes[blockType][turnState][j] == 1) {
+                        g.fillRect((j % 4 + x + 3) * 20, (j / 4 + k) * 20, 20, 20);
+                    }
+                }
+
 //I S Z J O L T
-            if (blockType == 0) g.setColor(Color.decode("#00BFFF"));
-            else if (blockType == 1) g.setColor(Color.green);
-            else if (blockType == 2) g.setColor(Color.red);
-            else if (blockType == 3) g.setColor(Color.blue);
-            else if (blockType == 4) g.setColor(Color.decode("#FFD700"));
-            else if (blockType == 5) g.setColor(Color.decode("#FF8800"));
-            else if (blockType == 6) g.setColor(Color.decode("#CC00FF"));
+                if (blockType == 0) g.setColor(Color.decode("#00BFFF"));
+                else if (blockType == 1) g.setColor(Color.green);
+                else if (blockType == 2) g.setColor(Color.red);
+                else if (blockType == 3) g.setColor(Color.blue);
+                else if (blockType == 4) g.setColor(Color.decode("#FFD700"));
+                else if (blockType == 5) g.setColor(Color.decode("#FF8800"));
+                else if (blockType == 6) g.setColor(Color.decode("#CC00FF"));
 
-            for (int j = 0; j < 16; j++) {
-                if (shapes[blockType][turnState][j] == 1) {
-                    g.fillRect((j % 4 + x + 3) * 20, (j / 4 + y) * 20, 20, 20);
+                for (int j = 0; j < 16; j++) {
+                    if (shapes[blockType][turnState][j] == 1) {
+                        g.fillRect((j % 4 + x + 3) * 20, (j / 4 + y) * 20, 20, 20);
+                    }
                 }
-            }
-
-
-            g.setColor(Color.black);
+                g.setColor(Color.black);
+                for (int j = 0; j < 16; j++) {
+                    if (shapes[blockType][turnState][j] == 1) {
+                        g.drawRect((j % 4 + x + 3) * 20, (j / 4 + y) * 20, 20, 20);
+                    }
+                }
 // fixed blocks
-            for (int j = 0; j < 22; j++) {
-                for (int i = 2; i < 14; i++) {
-                    if (map[i][j] == 1) {//no use
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.gray);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                    } else if (map[i][j] == 3) {
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 5) {
-                        g.setColor(Color.decode("#00BFFF"));
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 7) {
-                        g.setColor(Color.green);
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 9) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 11) {
-                        g.setColor(Color.blue);
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 13) {
-                        g.setColor(Color.decode("#FFD700"));
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 15) {
-                        g.setColor(Color.decode("#FF8800"));
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
-                    } else if (map[i][j] == 17) {
-                        g.setColor(Color.decode("#CC00FF"));
-                        g.fillRect(i * 20, j * 20, 20, 20);
-                        g.setColor(Color.black);
-                        g.drawRect(i * 20, j * 20, 20, 20);
+                for (int j = 0; j < 22; j++) {
+                    for (int i = 2; i < 14; i++) {
+                        if (map[i][j] == 1) {//no use
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.gray);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                        } else if (map[i][j] == 3) {
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 5) {
+                            g.setColor(Color.decode("#00BFFF"));
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 7) {
+                            g.setColor(Color.green);
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 9) {
+                            g.setColor(Color.red);
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 11) {
+                            g.setColor(Color.blue);
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 13) {
+                            g.setColor(Color.decode("#FFD700"));
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 15) {
+                            g.setColor(Color.decode("#FF8800"));
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        } else if (map[i][j] == 17) {
+                            g.setColor(Color.decode("#CC00FF"));
+                            g.fillRect(i * 20, j * 20, 20, 20);
+                            g.setColor(Color.black);
+                            g.drawRect(i * 20, j * 20, 20, 20);
+                        }
                     }
                 }
-            }
 // right side
-            g.setColor(Color.blue);
-            g.setFont(new Font("aa", Font.BOLD, 18));
-            g.drawString("hold: " + shapeOfBrick[holded], 288, 20);
-            //g.drawString("x: " + x + " y: " + y, 288, 380);
-            for (int i = 0; i < 16; i++) {
-                if (holded < 7) {
-                    if (holded == 0) g.setColor(Color.decode("#00BFFF"));
-                    else if (holded == 1) g.setColor(Color.green);
-                    else if (holded == 2) g.setColor(Color.red);
-                    else if (holded == 3) g.setColor(Color.blue);
-                    else if (holded == 4) g.setColor(Color.decode("#FFD700"));
-                    else if (holded == 5) g.setColor(Color.decode("#FF8800"));
-                    else if (holded == 6) g.setColor(Color.decode("#CC00FF"));
-                    if (shapes[holded][0][i] == 1) {
-                        g.fillRect(288 + (i % 4) * 12, 32 + i / 4 * 14, 14, 14);
+                g.setColor(Color.blue);
+                g.setFont(new Font("aa", Font.BOLD, 18));
+                g.drawString("hold: " + shapeOfBrick[holded], 288, 20);
+                //g.drawString("x: " + x + " y: " + y, 288, 380);
+                for (int i = 0; i < 16; i++) {
+                    if (holded < 7) {
+                        if (holded == 0) g.setColor(Color.decode("#00BFFF"));
+                        else if (holded == 1) g.setColor(Color.green);
+                        else if (holded == 2) g.setColor(Color.red);
+                        else if (holded == 3) g.setColor(Color.blue);
+                        else if (holded == 4) g.setColor(Color.decode("#FFD700"));
+                        else if (holded == 5) g.setColor(Color.decode("#FF8800"));
+                        else if (holded == 6) g.setColor(Color.decode("#CC00FF"));
+                        if (shapes[holded][0][i] == 1) {
+                            g.fillRect(288 + (i % 4) * 12, 32 + i / 4 * 14, 14, 14);
+                        }
+
                     }
-
                 }
-            }
-            g.setColor(Color.blue);
-            g.drawString("score: " + score, 288, 260);
-            g.drawString("LS: " + lineSent, 288, 290);
-            if (combo >= 1) {
-                g.setColor(Color.red);
-                g.drawString(combo + " COMBO!", 288, 320);
-            }
-            if (perfect) {
-                g.setColor(Color.green);
-                g.drawString("PERFECT CLEAR", 288, 360);
-            }
-            if (tetris) {
-                g.setColor(Color.decode("#00BFFF"));
-                g.drawString("TETRIS", 288, 370);
-                if (showB2B)
-                    g.drawString("B2B", 288, 352);
-            }
-            if (tSpin) {
-                g.setColor(Color.decode("#CC00FF"));
-                if (showB2B)
-                    g.drawString("B2B", 288, 340);
-                g.drawString("T-SPIN", 288, 356);
-                if (tCount == 1)
-                    g.drawString("MINI", 288, 372);
-                else if (tCount == 2) {
-                    g.drawString("SINGLE", 288, 372);
-                } else if (tCount == 3) {
-                    g.drawString("DOUBLE", 288, 372);
-                } else if (tCount == 4) {
-                    g.drawString("TRIPLE", 288, 372);
+                g.setColor(Color.blue);
+                g.drawString("score: " + score, 288, 260);
+                g.drawString("LS: " + lineSent, 288, 290);
+                if (combo >= 1) {
+                    g.setColor(Color.red);
+                    g.drawString(combo + " COMBO!", 288, 320);
                 }
-            }
-
-            g.setColor(Color.gray);
-            g.drawString("next: ", 288, 92);
-            for (int i = 0; i < 16; i++) {
-                if (nextOne < 7) {
-                    if (nextOne == 0) g.setColor(Color.decode("#00BFFF"));
-                    else if (nextOne == 1) g.setColor(Color.green);
-                    else if (nextOne == 2) g.setColor(Color.red);
-                    else if (nextOne == 3) g.setColor(Color.blue);
-                    else if (nextOne == 4) g.setColor(Color.decode("#FFD700"));
-                    else if (nextOne == 5) g.setColor(Color.decode("#FF8800"));
-                    else if (nextOne == 6) g.setColor(Color.decode("#CC00FF"));
-                    if (shapes[nextOne][0][i] == 1) {
-                        g.fillRect(288 + (i % 4) * 12, 108 + i / 4 * 14, 14, 14);
+                if (perfect) {
+                    g.setColor(Color.green);
+                    g.drawString("PERFECT CLEAR", 288, 360);
+                }
+                if (tetris) {
+                    g.setColor(Color.decode("#00BFFF"));
+                    g.drawString("TETRIS", 288, 370);
+                    if (showB2B)
+                        g.drawString("B2B", 288, 352);
+                }
+                if (tSpin) {
+                    g.setColor(Color.decode("#CC00FF"));
+                    if (showB2B)
+                        g.drawString("B2B", 288, 340);
+                    g.drawString("T-SPIN", 288, 356);
+                    if (tCount == 1)
+                        g.drawString("MINI", 288, 372);
+                    else if (tCount == 2) {
+                        g.drawString("SINGLE", 288, 372);
+                    } else if (tCount == 3) {
+                        g.drawString("DOUBLE", 288, 372);
+                    } else if (tCount == 4) {
+                        g.drawString("TRIPLE", 288, 372);
                     }
-
                 }
-            }
-            g.setColor(Color.gray);
-            for (int i = 0; i < 16; i++) {
-                if (nextTwo < 7) {
-                    if (nextTwo == 0) g.setColor(Color.decode("#00BFFF"));
-                    else if (nextTwo == 1) g.setColor(Color.green);
-                    else if (nextTwo == 2) g.setColor(Color.red);
-                    else if (nextTwo == 3) g.setColor(Color.blue);
-                    else if (nextTwo == 4) g.setColor(Color.decode("#FFD700"));
-                    else if (nextTwo == 5) g.setColor(Color.decode("#FF8800"));
-                    else if (nextTwo == 6) g.setColor(Color.decode("#CC00FF"));
-                    if (shapes[nextTwo][0][i] == 1) {
-                        g.fillRect(288 + (i % 4) * 12, 160 + i / 4 * 14, 14, 14);
+
+                g.setColor(Color.gray);
+                g.drawString("next: ", 288, 92);
+                for (int i = 0; i < 16; i++) {
+                    if (nextOne < 7) {
+                        if (nextOne == 0) g.setColor(Color.decode("#00BFFF"));
+                        else if (nextOne == 1) g.setColor(Color.green);
+                        else if (nextOne == 2) g.setColor(Color.red);
+                        else if (nextOne == 3) g.setColor(Color.blue);
+                        else if (nextOne == 4) g.setColor(Color.decode("#FFD700"));
+                        else if (nextOne == 5) g.setColor(Color.decode("#FF8800"));
+                        else if (nextOne == 6) g.setColor(Color.decode("#CC00FF"));
+                        if (shapes[nextOne][0][i] == 1) {
+                            g.fillRect(288 + (i % 4) * 12, 108 + i / 4 * 14, 14, 14);
+                        }
+
                     }
-
                 }
+                g.setColor(Color.gray);
+                for (int i = 0; i < 16; i++) {
+                    if (nextTwo < 7) {
+                        if (nextTwo == 0) g.setColor(Color.decode("#00BFFF"));
+                        else if (nextTwo == 1) g.setColor(Color.green);
+                        else if (nextTwo == 2) g.setColor(Color.red);
+                        else if (nextTwo == 3) g.setColor(Color.blue);
+                        else if (nextTwo == 4) g.setColor(Color.decode("#FFD700"));
+                        else if (nextTwo == 5) g.setColor(Color.decode("#FF8800"));
+                        else if (nextTwo == 6) g.setColor(Color.decode("#CC00FF"));
+                        if (shapes[nextTwo][0][i] == 1) {
+                            g.fillRect(288 + (i % 4) * 12, 160 + i / 4 * 14, 14, 14);
+                        }
+
+                    }
+                }
+                g.setFont(new Font("aa", Font.PLAIN, 13));
             }
-            g.setFont(new Font("aa", Font.PLAIN, 13));
         }
 
         class TimerListener extends KeyAdapter implements ActionListener {
@@ -914,12 +953,20 @@ public class Tetris extends JFrame {
             }
         }
     }
+//    class Cat implements ActionListener{
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            a.newGame();
+//        }
+//    }
+
 
     class MenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("newGame")) {
                 a.newGame();
+                a.remove(b);
             } else if (e.getActionCommand().equals("pause")) {
                 a.pause();
                 j2.setEnabled(false);
