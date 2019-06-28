@@ -57,6 +57,7 @@ public class Tetris extends JFrame {
     public static void main(String[] args) {
         Tetris te = new Tetris();
         te.setVisible(true);
+        te.enableInputMethods(false);
     }
 
     public String[] shapeOfBrick = {"I", "S", "Z", "J", "O", "L", "T", ""};
@@ -153,7 +154,7 @@ public class Tetris extends JFrame {
 
         public void iniBlock() {
             int temp;
-            temp = (int) (Math.random() * 1000) % 4;
+            temp = (int) (Math.random() * 1000) % 7;
             while (blocks[temp] != 0) {
                 temp += 1;
                 temp = temp % 7;
@@ -163,7 +164,7 @@ public class Tetris extends JFrame {
             blockType = temp;
             x = 5;
             y = 0;
-            temp = (int) (Math.random() * 1000) % 4;
+            temp = (int) (Math.random() * 1000) % 7;
             while (blocks[temp] != 0) {
                 temp += 1;
                 temp = temp % 7;
@@ -183,7 +184,7 @@ public class Tetris extends JFrame {
 
         public void nextBlock() {
             int temp;
-            temp = (int) (Math.random() * 1000) % 4;
+            temp = (int) (Math.random() * 1000) % 7;
             while (blocks[temp] != 0) {
                 temp += 1;
                 temp = temp % 7;
