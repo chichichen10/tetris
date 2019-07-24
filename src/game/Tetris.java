@@ -30,15 +30,20 @@ public class Tetris extends JFrame {
         j3.setActionCommand("resume");
         menuGame.add(j3);
 
+        b = new JButton();
+        b.setLocation(120, 100);
+        b.setSize(200, 100);
+        b.setText("Start Game");
+        b.setActionCommand("newGame");
+        add(b);
+
         MenuListener ml = new MenuListener();
         j1.addActionListener(ml);
         j2.addActionListener(ml);
         j3.addActionListener(ml);
+        b.addActionListener(ml);
 
-//        b= new JButton();
-//        b.setLocation(100,100);
-//        b.setSize(100,100);
-//        add(b);
+
 //        Cat cat = new Cat();
 //        b.addActionListener(cat);
 
@@ -47,11 +52,13 @@ public class Tetris extends JFrame {
 
         this.addKeyListener(a.listener);
         add(a);
+//        a.add(b);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(440, 550);
         setLocation(400, 100);
         setTitle("Tetris");
         setResizable(false);
+        requestFocus();
     }
 
     public static void main(String[] args) {
@@ -63,7 +70,7 @@ public class Tetris extends JFrame {
     public String[] shapeOfBrick = {"I", "S", "Z", "J", "O", "L", "T", ""};
 
     class TetrisPanel extends JPanel {
-        int[][] map = new int[16][24];// 為解決越界,在邊上預留了1列
+        int[][] map = new int[16][26];// 為解決越界,在邊上預留了1列
         // [brickType][rotate][]
         int shapes[][][] = new int[][][]{
 ///I
@@ -145,7 +152,7 @@ public class Tetris extends JFrame {
         public boolean showB2B;
 
         public TetrisPanel() {
-            stop();
+            preGame();
             //newGame();
         }
 
@@ -162,8 +169,12 @@ public class Tetris extends JFrame {
             blocks[temp] = 1;
             numOfBlocks++;
             blockType = temp;
-            x = 5;
-            y = 0;
+            if (blockType != 4)
+                x = 3;
+            else x = 4;
+            if (blockType != 0)
+                y = 0;
+            else y = 1;
             temp = (int) (Math.random() * 1000) % 7;
             while (blocks[temp] != 0) {
                 temp += 1;
@@ -179,6 +190,7 @@ public class Tetris extends JFrame {
             blocks[temp] = 1;
             numOfBlocks++;
             nextTwo = temp;
+            down();
         }
 
 
@@ -204,10 +216,15 @@ public class Tetris extends JFrame {
                     blocks[i] = 0;
                 }
             }
-            turnState = (int) (Math.random() * 1000) % 4;
-            x = 5;
-            y = 0;
+            turnState = 0;
+            if (blockType != 4)
+                x = 3;
+            else x = 4;
+            if (blockType != 0)
+                y = 0;
+            else y = 1;
             if (crash(x, y, blockType, turnState) == 0) {
+
                 timer.stop();
                 int option = JOptionPane.showConfirmDialog(this,
                         "--Game Over--\nPlay Again?");
@@ -215,8 +232,10 @@ public class Tetris extends JFrame {
                     newGame();
                 } else if (option == JOptionPane.NO_OPTION) {
                     System.exit(0);
+
                 }
             }
+            down();
         }
 
         public void nextHoldedBlock() {
@@ -224,11 +243,16 @@ public class Tetris extends JFrame {
             lock = false;
             tCheck = false;
             blockType = holded;
-            turnState = (int) (Math.random() * 1000) % 4;
+            turnState = 0;
             turn = false;
-            x = 5;
-            y = 0;
+            if (blockType != 4)
+                x = 3;
+            else x = 4;
+            if (blockType != 0)
+                y = 0;
+            else y = 1;
             if (crash(x, y, blockType, turnState) == 0) {
+
                 timer.stop();
                 int option = JOptionPane.showConfirmDialog(this,
                         "--Game Over--\nPlay Again?");
@@ -236,8 +260,10 @@ public class Tetris extends JFrame {
                     newGame();
                 } else if (option == JOptionPane.NO_OPTION) {
                     System.exit(0);
+
                 }
             }
+            down();
         }
 
         private boolean game;
@@ -247,21 +273,31 @@ public class Tetris extends JFrame {
             JLabel label = new JLabel("<html>Welcome to Tetris<br/>&lt HOW TO PLAY &gt<br/>right,left: move<br/>down: soft drop<br/>space: hard drop<br/>up:rotate clockwise<br/>z: rotate counter-clockwise<br/>shift: hold</html>");
             label.setFont(new Font("Arial", Font.BOLD, 18));
             JOptionPane option = new JOptionPane(label);
-            final JDialog d = option.createDialog((JFrame)null, "Welcome");
-            d.setLocation(440,350);
+            final JDialog d = option.createDialog((JFrame) null, "Welcome");
+            d.setLocation(440, 350);
             d.setVisible(true);
+            preGame();
+//            newGame();
+        }
 
-            newGame();
+        public void preGame() {
+            game = false;
+            b.setVisible(true);
+            repaint();
+
+//            newGame();
+
         }
 
         public void newGame() {
+            b.setVisible(false);
             game = true;
             for (int i = 2; i < 14; i++) {// 5
-                for (int j = 0; j < 22; j++) {
+                for (int j = 0; j < 24; j++) {
                     map[i][j] = 0;
                     map[13][j] = map[2][j] = 3;
                 }
-                map[i][21] = 3;
+                map[i][23] = 3;
             }
             // timer = new Timer(300, listener);
             delay = 1000;
@@ -632,7 +668,7 @@ public class Tetris extends JFrame {
             tCount = 0;
             lines = 0;
             showB2B = b2b;
-            for (int b = 0; b < 21; b++) {
+            for (int b = 2; b < 23; b++) {
                 int c = 1;
                 for (int a = 2; a < 14; a++) {// 10
                     c &= map[a][b];
@@ -645,6 +681,24 @@ public class Tetris extends JFrame {
                     }
                     lines++;
                     remainBlocks -= 10;
+                }
+            }
+            boolean gameover = false;
+            for(int a = 3;a<13;a++){
+                if(map[a][1]!=0){
+                    gameover = true;
+                    break;
+                }
+            }
+            if(gameover){
+                timer.stop();
+                int option = JOptionPane.showConfirmDialog(this,
+                        "--Game Over--\nPlay Again?");
+                if (option == JOptionPane.OK_OPTION) {
+                    newGame();
+                } else if (option == JOptionPane.NO_OPTION) {
+                    System.exit(0);
+
                 }
             }
             if (lines > 0) {
@@ -737,7 +791,7 @@ public class Tetris extends JFrame {
             if (game) {
                 super.paintComponent(g);// 清除殘影
                 for (int i = 3; i < 13; i++) {
-                    for (int j = 0; j < 21; j++) {
+                    for (int j = 3; j < 23; j++) {
                         if ((i + j) % 2 == 0)
                             g.setColor(Color.decode("#272727"));
                         else g.setColor(Color.decode("#000000"));
@@ -766,18 +820,18 @@ public class Tetris extends JFrame {
                 else if (blockType == 6) g.setColor(Color.decode("#CC00FF"));
 
                 for (int j = 0; j < 16; j++) {
-                    if (shapes[blockType][turnState][j] == 1) {
+                    if (shapes[blockType][turnState][j] == 1 && j / 4 + y > 2) {
                         g.fillRect((j % 4 + x + 3) * 20, (j / 4 + y) * 20, 20, 20);
                     }
                 }
                 g.setColor(Color.black);
                 for (int j = 0; j < 16; j++) {
-                    if (shapes[blockType][turnState][j] == 1) {
+                    if (shapes[blockType][turnState][j] == 1 && j / 4 + y > 2) {
                         g.drawRect((j % 4 + x + 3) * 20, (j / 4 + y) * 20, 20, 20);
                     }
                 }
 // fixed blocks
-                for (int j = 0; j < 22; j++) {
+                for (int j = 3; j < 24; j++) {
                     for (int i = 2; i < 14; i++) {
                         if (map[i][j] == 1) {//no use
                             g.fillRect(i * 20, j * 20, 20, 20);
@@ -967,7 +1021,6 @@ public class Tetris extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("newGame")) {
                 a.newGame();
-                a.remove(b);
             } else if (e.getActionCommand().equals("pause")) {
                 a.pause();
                 j2.setEnabled(false);
@@ -978,6 +1031,7 @@ public class Tetris extends JFrame {
                 j3.setEnabled(false);
                 j2.setEnabled(true);
             }
+            Tetris.this.requestFocus();
         }
     }
 }

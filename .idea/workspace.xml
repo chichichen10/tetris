@@ -8,8 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1fe8c801-9f09-4971-8c11-8b989ec3df65" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/tetris_jar/tetris.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/tetris_jar/tetris.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/tetris/game/Tetris$TetrisPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/tetris/game/Tetris$TetrisPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Tetris.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Tetris.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -27,10 +25,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/game/Tetris.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="58" column="28" lean-forward="true" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+            <state relative-caret-position="9">
+              <caret line="685" column="37" selection-start-line="685" selection-start-column="37" selection-end-line="685" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#10962#10963#0" expanded="true" />
+                <element signature="e#11034#11035#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,6 +62,8 @@
       <find>lock</find>
       <find>main</find>
       <find>stop</find>
+      <find>newGame</find>
+      <find>turnstate</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -145,7 +147,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
@@ -160,7 +161,7 @@
       <window_info anchor="bottom" id="Version Control" order="3" weight="0.3286119" />
       <window_info anchor="bottom" id="Message" order="4" />
       <window_info anchor="bottom" id="Find" order="5" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" sideWeight="0.4966488" visible="true" weight="0.3243626" />
+      <window_info anchor="bottom" id="Run" order="6" sideWeight="0.4966488" weight="0.3243626" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
@@ -188,7 +189,7 @@
   <component name="editorHistoryManager">
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/awt/Component.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1271">
+        <state relative-caret-position="226">
           <caret line="3309" column="16" selection-start-line="3309" selection-start-column="16" selection-end-line="3309" selection-end-column="16" />
           <folding>
             <element signature="e#114480#114481#0" expanded="true" />
@@ -197,12 +198,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/javax/swing/JComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="1476" column="16" selection-start-line="1476" selection-start-column="16" selection-end-line="1476" selection-end-column="16" />
+          <folding>
+            <element signature="e#56110#56111#0" expanded="true" />
+            <element signature="e#56146#56147#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/game/Tetris.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="58" column="28" lean-forward="true" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+        <state relative-caret-position="9">
+          <caret line="685" column="37" selection-start-line="685" selection-start-column="37" selection-end-line="685" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10962#10963#0" expanded="true" />
+            <element signature="e#11034#11035#0" expanded="true" />
           </folding>
         </state>
       </provider>
