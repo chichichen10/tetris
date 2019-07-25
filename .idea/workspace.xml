@@ -7,7 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fe8c801-9f09-4971-8c11-8b989ec3df65" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Tetris.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Tetris.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -25,11 +24,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/game/Tetris.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9">
-              <caret line="685" column="37" selection-start-line="685" selection-start-column="37" selection-end-line="685" selection-end-column="37" />
+            <state relative-caret-position="356">
+              <caret line="299" column="13" selection-start-line="299" selection-start-column="13" selection-end-line="299" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#10926#10927#0" expanded="true" />
                 <element signature="e#10962#10963#0" expanded="true" />
+                <element signature="e#10995#10996#0" expanded="true" />
                 <element signature="e#11034#11035#0" expanded="true" />
               </folding>
             </state>
@@ -211,11 +212,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/game/Tetris.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9">
-          <caret line="685" column="37" selection-start-line="685" selection-start-column="37" selection-end-line="685" selection-end-column="37" />
+        <state relative-caret-position="356">
+          <caret line="299" column="13" selection-start-line="299" selection-start-column="13" selection-end-line="299" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10926#10927#0" expanded="true" />
             <element signature="e#10962#10963#0" expanded="true" />
+            <element signature="e#10995#10996#0" expanded="true" />
             <element signature="e#11034#11035#0" expanded="true" />
           </folding>
         </state>

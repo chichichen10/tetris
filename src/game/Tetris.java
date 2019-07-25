@@ -30,10 +30,13 @@ public class Tetris extends JFrame {
         j3.setActionCommand("resume");
         menuGame.add(j3);
 
-        b = new JButton();
-        b.setLocation(120, 100);
+        ImageIcon start = new ImageIcon("./src/start.png");
+
+        b = new JButton(new ImageIcon(start.getImage().getScaledInstance(200, 100, Image.SCALE_DEFAULT)));
+        b.setLocation(120, 200);
         b.setSize(200, 100);
-        b.setText("Start Game");
+        b.setBackground(Color.white);
+//        b.setText("Start Game");
         b.setActionCommand("newGame");
         add(b);
 
@@ -150,6 +153,7 @@ public class Tetris extends JFrame {
         public boolean tetris;
         public boolean b2b;
         public boolean showB2B;
+        private boolean gameover;
 
         public TetrisPanel() {
             preGame();
@@ -195,6 +199,9 @@ public class Tetris extends JFrame {
 
 
         public void nextBlock() {
+            if (gameover) {
+                endGame();
+            }
             int temp;
             temp = (int) (Math.random() * 1000) % 7;
             while (blocks[temp] != 0) {
@@ -223,22 +230,17 @@ public class Tetris extends JFrame {
             if (blockType != 0)
                 y = 0;
             else y = 1;
-            if (crash(x, y, blockType, turnState) == 0) {
-
-                timer.stop();
-                int option = JOptionPane.showConfirmDialog(this,
-                        "--Game Over--\nPlay Again?");
-                if (option == JOptionPane.OK_OPTION) {
-                    newGame();
-                } else if (option == JOptionPane.NO_OPTION) {
-                    System.exit(0);
-
-                }
+            repaint();
+            if (crash(x, y + 1, blockType, turnState) == 0 || crash(x, y + 2, blockType, turnState) == 0) {
+                endGame();
             }
             down();
         }
 
         public void nextHoldedBlock() {
+            if (gameover) {
+                endGame();
+            }
             spin = 0;
             lock = false;
             tCheck = false;
@@ -251,19 +253,24 @@ public class Tetris extends JFrame {
             if (blockType != 0)
                 y = 0;
             else y = 1;
-            if (crash(x, y, blockType, turnState) == 0) {
-
-                timer.stop();
-                int option = JOptionPane.showConfirmDialog(this,
-                        "--Game Over--\nPlay Again?");
-                if (option == JOptionPane.OK_OPTION) {
-                    newGame();
-                } else if (option == JOptionPane.NO_OPTION) {
-                    System.exit(0);
-
-                }
+            repaint();
+            if (crash(x, y + 1, blockType, turnState) == 0 || crash(x, y + 2, blockType, turnState) == 0) {
+                endGame();
             }
             down();
+        }
+
+        public void endGame() {
+            timer.stop();
+            gameover = false;
+            int option = JOptionPane.showConfirmDialog(this,
+                    "--Game Over--\nPlay Again?");
+            if (option == JOptionPane.OK_OPTION) {
+                newGame();
+            } else if (option == JOptionPane.NO_OPTION) {
+                preGame();
+
+            }
         }
 
         private boolean game;
@@ -284,12 +291,20 @@ public class Tetris extends JFrame {
             game = false;
             b.setVisible(true);
             repaint();
+            for (int i = 2; i < 14; i++) {// 5
+                for (int j = 0; j < 24; j++) {
+                    map[i][j] = 0;
+                    map[13][j] = map[2][j] = 3;
+                }
+                map[i][23] = 3;
+            }
 
 //            newGame();
 
         }
 
         public void newGame() {
+            System.out.println("newGame");
             b.setVisible(false);
             game = true;
             for (int i = 2; i < 14; i++) {// 5
@@ -319,6 +334,7 @@ public class Tetris extends JFrame {
             perfect = false;
             turn = false;
             b2b = false;
+            gameover = false;
             j3.setEnabled(false);
             iniBlock();
             repaint();
@@ -683,24 +699,26 @@ public class Tetris extends JFrame {
                     remainBlocks -= 10;
                 }
             }
-            boolean gameover = false;
-            for(int a = 3;a<13;a++){
-                if(map[a][1]!=0){
-                    gameover = true;
+            boolean over = false;
+            for (int a = 3; a < 13; a++) {
+                if (map[a][1] != 0) {
+                    over = true;
                     break;
                 }
             }
-            if(gameover){
-                timer.stop();
-                int option = JOptionPane.showConfirmDialog(this,
-                        "--Game Over--\nPlay Again?");
-                if (option == JOptionPane.OK_OPTION) {
-                    newGame();
-                } else if (option == JOptionPane.NO_OPTION) {
-                    System.exit(0);
-
-                }
-            }
+            if (over)
+                gameover = true;
+//            if(gameover){
+//                timer.stop();
+//                int option = JOptionPane.showConfirmDialog(this,
+//                        "--Game Over--\nPlay Again?");
+//                if (option == JOptionPane.OK_OPTION) {
+//                    newGame();
+//                } else if (option == JOptionPane.NO_OPTION) {
+//                    System.exit(0);
+//
+//                }
+//            }
             if (lines > 0) {
                 combo++;
                 score += combo * 50;
@@ -805,7 +823,7 @@ public class Tetris extends JFrame {
                     k++;
                 }
                 for (int j = 0; j < 16; j++) {
-                    if (shapes[blockType][turnState][j] == 1) {
+                    if (shapes[blockType][turnState][j] == 1 && j / 4 + k > 2) {
                         g.fillRect((j % 4 + x + 3) * 20, (j / 4 + k) * 20, 20, 20);
                     }
                 }
@@ -965,6 +983,9 @@ public class Tetris extends JFrame {
                     }
                 }
                 g.setFont(new Font("aa", Font.PLAIN, 13));
+            }
+            else{
+                super.paintComponent(g);
             }
         }
 
