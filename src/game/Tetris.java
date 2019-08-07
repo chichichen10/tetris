@@ -30,14 +30,18 @@ public class Tetris extends JFrame {
         j3.setActionCommand("resume");
         menuGame.add(j3);
 
-        ImageIcon start = new ImageIcon("./src/start.png");
+        ImageIcon start = new ImageIcon(new ImageIcon("./src/start.png").getImage().getScaledInstance(200, 100, Image.SCALE_DEFAULT));
+        ImageIcon start2 = new ImageIcon(new ImageIcon("./src/start2.png").getImage().getScaledInstance(200, 100, Image.SCALE_DEFAULT));
 
-        b = new JButton(new ImageIcon(start.getImage().getScaledInstance(200, 100, Image.SCALE_DEFAULT)));
+        b = new JButton(start);
+        b.setRolloverIcon(start2);
         b.setLocation(120, 200);
         b.setSize(200, 100);
         b.setBackground(Color.white);
 //        b.setText("Start Game");
-        b.setActionCommand("newGame");
+        b.setActionCommand("start");
+        b.setOpaque(false);
+        b.setBorderPainted(false);
         add(b);
 
         MenuListener ml = new MenuListener();
@@ -92,11 +96,7 @@ public class Tetris extends JFrame {
                         {0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
                         {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}},
 // J
-//                {{1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//                        {0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0},
-//                        {0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-//                        {1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}},
-//                SRS
+
                 {{1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
                         {0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -107,21 +107,11 @@ public class Tetris extends JFrame {
                         {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
 // L
-//                {{1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//                        {0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-//                        {0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-//                        {1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}},
-                //SRS
                 {{0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
                         {0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                         {1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}},
 // T
-//                {{1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//                        {0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-//                        {0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-//                        {1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}}};
-                //SRS
                 {{0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                         {0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
                         {0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
@@ -136,7 +126,10 @@ public class Tetris extends JFrame {
         private int score;
         private int delay;
         private TimerListener listener = new TimerListener();
-        private Timer timer;
+        private Timer timer = new Timer(900,listener);
+        private CountdownListener countdownListener = new CountdownListener();
+        private Timer countdown = new Timer(1000,countdownListener);
+        private int time;
         public int holded;
         private int combo;
         boolean running;
@@ -315,9 +308,9 @@ public class Tetris extends JFrame {
                 map[i][23] = 3;
             }
             // timer = new Timer(300, listener);
-            delay = 1000;
-            timer = new Timer(delay, listener);
             timer.start();
+            countdown.start();
+            time=0;
             score = 0;
             combo = -1;
             numOfBlocks = 0;
@@ -700,6 +693,7 @@ public class Tetris extends JFrame {
                 }
             }
             boolean over = false;
+            timer.restart();
             for (int a = 3; a < 13; a++) {
                 if (map[a][1] != 0) {
                     over = true;
@@ -949,6 +943,9 @@ public class Tetris extends JFrame {
                     }
                 }
 
+                g.setColor(Color.blue);
+                g.drawString("Time: "+time,100,20);
+
                 g.setColor(Color.gray);
                 g.drawString("next: ", 288, 92);
                 for (int i = 0; i < 16; i++) {
@@ -1025,7 +1022,15 @@ public class Tetris extends JFrame {
                             pause();
                             running = false;
                         } else resume();
+
                 }
+            }
+        }
+        class CountdownListener implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent e){
+                time++;
+                repaint();
             }
         }
     }
@@ -1041,6 +1046,9 @@ public class Tetris extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("newGame")) {
+                a.timer.stop();
+                a.countdown.stop();
+
                 a.newGame();
             } else if (e.getActionCommand().equals("pause")) {
                 a.pause();
@@ -1051,6 +1059,8 @@ public class Tetris extends JFrame {
                 a.resume();
                 j3.setEnabled(false);
                 j2.setEnabled(true);
+            } else if (e.getActionCommand().equals("start")){
+                a.newGame();
             }
             Tetris.this.requestFocus();
         }
